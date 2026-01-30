@@ -6,6 +6,7 @@ TagManager:
   tags:
   - RedGoal
   - BlueGoal
+  - BoundaryColliders
   layers:
   - Default
   - TransparentFX

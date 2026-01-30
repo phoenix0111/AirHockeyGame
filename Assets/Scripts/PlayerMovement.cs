@@ -4,8 +4,9 @@ public class PlayerMovement : MonoBehaviour
 {
     public float speed = 15f;
     Rigidbody2D rb;
-    Vector2 targetPos;
-    public bool canMove = true;
+    
+   public Vector2 targetPos;
+    public bool canMove = false;
 
     void Start()
     {

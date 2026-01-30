@@ -36,15 +36,16 @@ public class gameManager : MonoBehaviour
     
     void Update()
     {
-        
-       timer -= Time.deltaTime;
+        if(gameStarted) return;
+
+        timer -= Time.deltaTime;
        countdownText.text = timer.ToString("0");
 
-        if (gameStarted == false  && timer <= 0)
+        if ( timer <= 0)
         {
             countdownText.text = "GO!";
            
-            Invoke("HideCountdownText", 0.5f);
+            Invoke("HideCountdownText", 1f);
 
             gameStarted = true;
         }
@@ -52,6 +53,7 @@ public class gameManager : MonoBehaviour
 
     public void UpdatePlayerScore()
     {
+        
         playerScore = playerScore + 1;
         playerScoreText.text = playerScore.ToString();
     }
@@ -59,7 +61,7 @@ public class gameManager : MonoBehaviour
     public void UpdateBotScore()
     {
         botScore = botScore + 1;
-        playerScoreText.text = botScore.ToString();
+        botScoreText.text = botScore.ToString();
     }
 
     private void HideCountdownText()
