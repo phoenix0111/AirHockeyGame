@@ -1,9 +1,12 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class AIPaddle : MonoBehaviour
 {
     [Header("References")]
     public Transform puck;
+    public Puck puckObject;
+    
 
     [Header("Movement")]
     public float speed = 6f;          // Overall movement speed
@@ -21,6 +24,11 @@ public class AIPaddle : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         targetPos = rb.position;
+    }
+
+    void Update()
+    {
+         aiCanMove = puckObject.canPlayerMove;
     }
 
     void FixedUpdate()

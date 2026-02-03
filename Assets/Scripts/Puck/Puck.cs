@@ -2,11 +2,20 @@ using UnityEngine;
 
 public class Puck : MonoBehaviour
 {
+    [Header("References")]
     public gameManager GameManager;
     public PlayerMovement playerMovement;
     public AIPaddle aiPaddle;
+    public CameraShake cameraShake;
+
+    public GameObject PVP_Player1;
+    public GameObject PVP_Player2;
+
+    [Header("Puck Settings")]
     private Rigidbody2D rb;
     public float nextTurnDirection = 0;
+    public GameObject hitvfx;
+    public float maxSpeed = 18f;
 
     [Header("Audio")]
     AudioSource ad;
@@ -16,46 +25,61 @@ public class Puck : MonoBehaviour
     public AudioClip roundwinSFX;
 
     private float lastHitTime = 0f;
-    public float hitCooldown = 0.2f; // 0.2 seconds between hits
+    public float hitCooldown = 0.2f;
+    public bool canPlayerMove ;
 
 
     void Start()
     {
        rb =  GetComponent<Rigidbody2D>();
-        playerMovement.canMove = false;
-       ad = GetComponent<AudioSource>();
+        ad = GetComponent<AudioSource>();
+
+       
+
+
+
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        
+        if (rb.linearVelocity.magnitude > maxSpeed)
+        {
+            rb.linearVelocity = rb.linearVelocity.normalized * maxSpeed;
+        }
     }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "RedGoal")
         {
+
             ad.PlayOneShot(goalSFX);
+            cameraShake.Shake(0.2f, 0.07f);
+            Handheld.Vibrate();
+
             Invoke("Roundwin_sfx", 0.7f);
-            playerMovement.canMove = false;
-            aiPaddle.aiCanMove = false;
+            //    playerMovement.canMove = false;
+            canPlayerMove = false;
+           // aiPaddle.aiCanMove = false;
             GameManager.UpdatePlayerScore();
-            ad.PlayOneShot(roundwinSFX);
+           
             GameManager.playerGoalText.SetActive(true);
             ResetPuck();
             nextTurnDirection = 1;
         }
+
         if (collision.gameObject.tag == "BlueGoal")
         {
             ad.PlayOneShot(goalSFX);
+            cameraShake.Shake(0.2f, 0.07f);
+            Handheld.Vibrate();
+
             Invoke("Roundwin_sfx", 0.7f);
-            playerMovement.canMove = false;
-            aiPaddle.aiCanMove = false;
+           // playerMovement.canMove = false;
+            canPlayerMove = false;
+           // aiPaddle.aiCanMove = false;
             GameManager.UpdateBotScore();
           
             GameManager.botGoalText.SetActive(true);
-           
             ResetPuck();
             nextTurnDirection = -1;
         }
@@ -71,6 +95,10 @@ public class Puck : MonoBehaviour
                 ad.volume = 1;
                 lastHitTime = Time.time;
             }
+          GameObject hitVFXObject =   Instantiate (hitvfx, collision.contacts[0].point, Quaternion.identity);
+          Destroy(hitVFXObject, 1f);
+
+
         }
         if (collision.gameObject.tag == "BoundaryColliders")
         {
@@ -82,6 +110,7 @@ public class Puck : MonoBehaviour
         }
     }
 
+   
     private void Roundwin_sfx()
     {
         ad.volume = 0.3f;
@@ -94,14 +123,26 @@ public class Puck : MonoBehaviour
         transform.position = new Vector3(0, -0.24f,0);
         rb.linearVelocity = Vector2.zero;
         
-        playerMovement.gameObject.transform.position = new Vector3(0, -3.07f, 0);         // reset player position
-        playerMovement.targetPos = new Vector3(0, -3.07f, 0);
+        if (playerMovement != null)
+        {
+            playerMovement.gameObject.transform.position = new Vector3(0, -3.07f, 0);         // reset player position
+            playerMovement.targetPos = new Vector3(0, -3.07f, 0);
 
-        aiPaddle.gameObject.transform.position = new Vector3(0, 2.79f, 0);    // reset ai position
-        aiPaddle.targetPos = new Vector3(0, 2.79f, 0);
-        
-        Invoke("HideGoalText", 1f);
-        Invoke("NextRound", 2f);
+            aiPaddle.gameObject.transform.position = new Vector3(0, 2.6f, 0);    // reset ai position
+            aiPaddle.targetPos = new Vector3(0, 2.6f, 0);
+        }
+        else
+        {
+            PVP_Player1.GetComponent<PvP>().gameObject.transform.position = new Vector3(0, -3.07f, 0);         // reset player1 position
+            PVP_Player1.GetComponent<PvP>().targetPos = new Vector3(0, -3.07f, 0);
+
+            PVP_Player2.GetComponent<PvP>().gameObject.transform.position = new Vector3(0, 2.6f, 0);    // reset player2 position
+            PVP_Player2.GetComponent<PvP>().targetPos = new Vector3(0, 2.6f, 0);
+        }
+
+
+            Invoke("HideGoalText", 1.5f);
+        Invoke("NextRound", 2.5f);
        
     }
     private void HideGoalText()
@@ -113,8 +154,10 @@ public class Puck : MonoBehaviour
    public void NextRound()
     {
         
-        playerMovement.canMove = true;
-        aiPaddle.aiCanMove = true;
+       // playerMovement.canMove = true;
+        //aiPaddle.aiCanMove = true;
+
+        canPlayerMove = true;
         Debug.Log("puck direction" + nextTurnDirection);
         Vector2 direction = new Vector2(0,nextTurnDirection);
         rb.AddForce(direction * 500f);
