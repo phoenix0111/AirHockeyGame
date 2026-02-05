@@ -5,15 +5,11 @@ using UnityEngine.SceneManagement;
 public class MainMenu : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    void Awake()
     {
-        
+        Screen.SetResolution(1080, 2400, true);
+
     }
 
     public void LoadEasyBot()
@@ -25,9 +21,9 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene("HardBot");
     }
 
-    public void Multiplayer()
+    public void Load1v1()
     {
-        SceneManager.LoadScene("MultiplayerScene");
+        SceneManager.LoadScene("1v1");
     }
 
     public void QuitGame()

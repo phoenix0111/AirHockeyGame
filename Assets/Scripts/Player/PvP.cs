@@ -10,11 +10,13 @@ public class PvP : MonoBehaviour
     public bool canMove = true;
 
     [Header("Player Settings")]
-    public bool isPlayer1;   
+    public bool isPlayer1;
 
     [Header("Movement Limits")]
     public float minY;
     public float maxY;
+
+    int fingerId = -1;   
 
     void Start()
     {
@@ -24,8 +26,7 @@ public class PvP : MonoBehaviour
 
     void Update()
     {
-        canMove = puck.canPlayerMove ;
-
+        canMove = puck.canPlayerMove;
         if (!canMove) return;
 
 #if UNITY_EDITOR || UNITY_STANDALONE
@@ -60,16 +61,34 @@ public class PvP : MonoBehaviour
             SetTarget(Input.mousePosition);
     }
 
-    // ---------------- MOBILE INPUT ----------------
+    // ---------------- MOBILE INPUT (FIXED) ----------------
     void HandleMobileInput()
     {
         foreach (Touch t in Input.touches)
         {
-            if (isPlayer1 && t.position.y < Screen.height / 2)
-                SetTarget(t.position);
+            // Assign finger
+            if (fingerId == -1 && t.phase == TouchPhase.Began)
+            {
+                if (isPlayer1 && t.position.y < Screen.height / 2)
+                    fingerId = t.fingerId;
 
-            if (!isPlayer1 && t.position.y > Screen.height / 2)
-                SetTarget(t.position);
+                if (!isPlayer1 && t.position.y > Screen.height / 2)
+                    fingerId = t.fingerId;
+            }
+
+            // Move only with assigned finger
+            if (t.fingerId == fingerId)
+            {
+                if (t.phase == TouchPhase.Moved || t.phase == TouchPhase.Stationary)
+                {
+                    SetTarget(t.position);
+                }
+
+                if (t.phase == TouchPhase.Ended || t.phase == TouchPhase.Canceled)
+                {
+                    fingerId = -1;
+                }
+            }
         }
     }
 

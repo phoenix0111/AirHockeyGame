@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
 
 
     public Vector2 targetPos;
-    public bool canMove ;
+    public bool canMove;
 
     void Start()
     {
@@ -32,7 +32,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!canMove) return;
 
-        Vector2 newPos = Vector2.MoveTowards( rb.position, targetPos, speed * Time.fixedDeltaTime );
+        Vector2 newPos = Vector2.MoveTowards(rb.position, targetPos, speed * Time.fixedDeltaTime);
 
         rb.MovePosition(newPos);
     }
