@@ -3,7 +3,7 @@ using UnityEngine;
 public class PvP : MonoBehaviour
 {
     public Puck puck;
-    public float speed = 15f;
+    public float speed = 17f;
     Rigidbody2D rb;
 
     public Vector2 targetPos;
@@ -16,7 +16,8 @@ public class PvP : MonoBehaviour
     public float minY;
     public float maxY;
 
-    int fingerId = -1;   
+    int fingerId = -1;
+
 
     void Start()
     {
@@ -27,20 +28,20 @@ public class PvP : MonoBehaviour
     void Update()
     {
         canMove = puck.canPlayerMove;
-        if (!canMove) return;
 
-#if UNITY_EDITOR || UNITY_STANDALONE
-        HandlePCInput();
-#else
-        HandleMobileInput();
-#endif
-
-        targetPos.y = Mathf.Clamp(targetPos.y, minY, maxY);
     }
 
     void FixedUpdate()
     {
         if (!canMove) return;
+
+#if UNITY_Android
+         HandleMobileInput();
+#else
+        HandleKeyboardInput();
+#endif
+
+        targetPos.y = Mathf.Clamp(targetPos.y, minY, maxY);
 
         Vector2 newPos = Vector2.MoveTowards(
             rb.position,
@@ -52,18 +53,42 @@ public class PvP : MonoBehaviour
     }
 
     // ---------------- PC INPUT ----------------
-    void HandlePCInput()
+    void HandleKeyboardInput()
     {
-        if (isPlayer1 && Input.GetMouseButton(0))
-            SetTarget(Input.mousePosition);
+        speed = 10;
+        Vector2 input = Vector2.zero;
 
-        if (!isPlayer1 && Input.GetMouseButton(1))
-            SetTarget(Input.mousePosition);
+        if (isPlayer1)
+        {
+            input.x = (Input.GetKey(KeyCode.D) ? 1 : 0) -
+                      (Input.GetKey(KeyCode.A) ? 1 : 0);
+
+            input.y = (Input.GetKey(KeyCode.W) ? 1 : 0) -
+                      (Input.GetKey(KeyCode.S) ? 1 : 0);
+        }
+        else
+        {
+            input.x = (Input.GetKey(KeyCode.RightArrow) ? 1 : 0) -
+                      (Input.GetKey(KeyCode.LeftArrow) ? 1 : 0);
+
+            input.y = (Input.GetKey(KeyCode.UpArrow) ? 1 : 0) -
+                      (Input.GetKey(KeyCode.DownArrow) ? 1 : 0);
+        }
+
+        // Normalize so diagonal isn't faster
+        if (input.sqrMagnitude > 1)
+            input.Normalize();
+
+        targetPos = rb.position + input * speed * Time.deltaTime;
     }
+
+
 
     // ---------------- MOBILE INPUT (FIXED) ----------------
     void HandleMobileInput()
     {
+        speed = 17;
+
         foreach (Touch t in Input.touches)
         {
             // Assign finger

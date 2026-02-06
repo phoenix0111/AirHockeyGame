@@ -8,7 +8,7 @@ public class CameraShake : MonoBehaviour
 
     void Awake()
     {
-       // Screen.SetResolution(1080, 2400, true);
+  
         originalPos = transform.localPosition;
     }
 
