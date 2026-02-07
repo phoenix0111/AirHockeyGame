@@ -8,6 +8,7 @@ public class PauseMenu : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Time.timeScale = 1f;
         pauseMenu.SetActive(false);
     }
 
@@ -27,12 +28,12 @@ public class PauseMenu : MonoBehaviour
 
     public void LoadMenu()
     {
-        Time.timeScale = 1f;
+        
         SceneManager.LoadScene("MainMenu");
     }
     public void RestartGame()
     {
-        Time.timeScale = 1f;
+        
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
