@@ -28,17 +28,16 @@ public class PvP : MonoBehaviour
     void Update()
     {
         canMove = puck.canPlayerMove;
-
     }
 
     void FixedUpdate()
     {
         if (!canMove) return;
 
-#if UNITY_Android
+#if UNITY_ANDROID
          HandleMobileInput();
-#else
-        HandleKeyboardInput();
+#else 
+         HandleKeybaodandWEBGLMobile_Input();
 #endif
 
         targetPos.y = Mathf.Clamp(targetPos.y, minY, maxY);
@@ -52,10 +51,10 @@ public class PvP : MonoBehaviour
         rb.MovePosition(newPos);
     }
 
-    // ---------------- PC INPUT ----------------
-    void HandleKeyboardInput()
+
+    void HandleKeybaodandWEBGLMobile_Input()
     {
-        speed = 10;
+
         Vector2 input = Vector2.zero;
 
         if (isPlayer1)
@@ -65,6 +64,7 @@ public class PvP : MonoBehaviour
 
             input.y = (Input.GetKey(KeyCode.W) ? 1 : 0) -
                       (Input.GetKey(KeyCode.S) ? 1 : 0);
+
         }
         else
         {
@@ -73,6 +73,7 @@ public class PvP : MonoBehaviour
 
             input.y = (Input.GetKey(KeyCode.UpArrow) ? 1 : 0) -
                       (Input.GetKey(KeyCode.DownArrow) ? 1 : 0);
+
         }
 
         // Normalize so diagonal isn't faster
@@ -80,15 +81,23 @@ public class PvP : MonoBehaviour
             input.Normalize();
 
         targetPos = rb.position + input * speed * Time.deltaTime;
+
+        foreach (Touch t in Input.touches)
+        {
+            if (isPlayer1 && t.position.y < Screen.height / 2)
+                SetTarget(t.position);
+
+            if (!isPlayer1 && t.position.y > Screen.height / 2)
+                SetTarget(t.position);
+        }
+
+
+
     }
 
-
-
-    // ---------------- MOBILE INPUT (FIXED) ----------------
+   
     void HandleMobileInput()
     {
-        speed = 17;
-
         foreach (Touch t in Input.touches)
         {
             // Assign finger
@@ -122,4 +131,5 @@ public class PvP : MonoBehaviour
         Vector2 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
         targetPos = worldPos;
     }
+
 }
