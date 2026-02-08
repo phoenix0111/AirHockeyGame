@@ -35,7 +35,7 @@ public class PvP : MonoBehaviour
         if (!canMove) return;
 
 #if UNITY_ANDROID
-         HandleMobileInput();
+        HandleMobileInput();
 #else 
          HandleKeybaodandWEBGLMobile_Input();
 #endif
@@ -95,7 +95,7 @@ public class PvP : MonoBehaviour
 
     }
 
-   
+
     void HandleMobileInput()
     {
         foreach (Touch t in Input.touches)

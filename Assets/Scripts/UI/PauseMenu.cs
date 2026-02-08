@@ -5,13 +5,13 @@ using UnityEngine.SceneManagement;
 public class PauseMenu : MonoBehaviour
 {
     public GameObject pauseMenu;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+
     void Start()
     {
         Time.timeScale = 1f;
         pauseMenu.SetActive(false);
     }
-
 
     public void PauseGame()
     {
@@ -28,12 +28,11 @@ public class PauseMenu : MonoBehaviour
 
     public void LoadMenu()
     {
-        
         SceneManager.LoadScene("MainMenu");
     }
+
     public void RestartGame()
     {
-        
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

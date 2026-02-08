@@ -8,7 +8,6 @@ public class CameraShake : MonoBehaviour
 
     void Awake()
     {
-  
         originalPos = transform.localPosition;
     }
 

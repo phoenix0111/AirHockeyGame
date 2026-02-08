@@ -6,7 +6,6 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody2D rb;
     public Puck puck;
 
-
     public Vector2 targetPos;
     public bool canMove;
 

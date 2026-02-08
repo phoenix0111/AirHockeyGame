@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 
 public class gameManager : MonoBehaviour
@@ -9,7 +10,6 @@ public class gameManager : MonoBehaviour
     public TextMeshProUGUI playerScoreText;
     public TextMeshProUGUI botScoreText;
     public TextMeshProUGUI countdownText;
-
     public GameObject playerGoalText;
     public GameObject botGoalText;
 
@@ -37,8 +37,6 @@ public class gameManager : MonoBehaviour
     {
         if (!gameStarted)
         {
-
-
             timer -= Time.deltaTime;
             countdownText.text = timer.ToString("0");
 
@@ -57,6 +55,7 @@ public class gameManager : MonoBehaviour
             Debug.Log("Game Over");
             puck.canPlayerMove = false;
             puck.gameObject.SetActive(false);
+            Invoke("SentPlayerToMainMenu", 3f);
 
             if (playerScore == 10)
             {
@@ -64,15 +63,15 @@ public class gameManager : MonoBehaviour
                 {
                     countdownText.text = "Blue Player Wins!";
                     countdownText.gameObject.SetActive(true);
-                    Debug.Log("Player Wins the Game!");
+                   
+
                 }
                 else
                 {
-
-
                     countdownText.text = "You Win!";
                     countdownText.gameObject.SetActive(true);
-                    Debug.Log("Player Wins the Game!");
+                   
+
                 }
             }
             else
@@ -81,13 +80,15 @@ public class gameManager : MonoBehaviour
                 {
                     countdownText.text = "Red Player Wins!";
                     countdownText.gameObject.SetActive(true);
-                    Debug.Log("Player Wins the Game!");
+                   
+
                 }
                 else
                 {
                     countdownText.text = "Bot Wins!";
                     countdownText.gameObject.SetActive(true);
-                    Debug.Log("Bot Wins the Game!");
+                   
+
                 }
             }
         }
@@ -114,6 +115,11 @@ public class gameManager : MonoBehaviour
 
         puck.nextTurnDirection = Random.Range(0, 2) == 0 ? -1 : 1;
         Debug.Log("Initial Puck Direction: " + puck.nextTurnDirection);
-        puck.NextRound();                                                 // 1st round begings  
+        puck.NextRound();                                                 // 1st round begings  and then goes on 
+    }
+
+    void SentPlayerToMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 }

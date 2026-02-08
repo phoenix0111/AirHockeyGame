@@ -6,7 +6,7 @@ public class AIPaddle : MonoBehaviour
     [Header("References")]
     public Transform puck;
     public Puck puckObject;
-    
+
 
     [Header("Movement")]
     public float speed = 6f;          // Overall movement speed
@@ -17,7 +17,7 @@ public class AIPaddle : MonoBehaviour
     public float hitOffset = 0.09f;      // How much AI overshoots puck
 
     Rigidbody2D rb;
-    public  Vector2 targetPos;
+    public Vector2 targetPos;
     public bool aiCanMove = false;
 
     void Start()
@@ -28,12 +28,12 @@ public class AIPaddle : MonoBehaviour
 
     void Update()
     {
-         aiCanMove = puckObject.canPlayerMove;
+        aiCanMove = puckObject.canPlayerMove;
     }
 
     void FixedUpdate()
     {
-        if( !aiCanMove) return;
+        if (!aiCanMove) return;
 
         if (puck.position.y > minY)
         {
@@ -47,7 +47,7 @@ public class AIPaddle : MonoBehaviour
         MoveSmooth();
     }
 
-    // ================= logic for defend and following puck =================
+    //  logic for defend and following puck 
 
     void ChaseAndHit()
     {
@@ -67,7 +67,7 @@ public class AIPaddle : MonoBehaviour
         );
     }
 
-    // ================= Movement =================
+    // movement
 
     void MoveSmooth()
     {

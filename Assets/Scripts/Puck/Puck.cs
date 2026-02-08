@@ -33,7 +33,6 @@ public class Puck : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         ad = GetComponent<AudioSource>();
-
     }
 
     void FixedUpdate()
@@ -141,7 +140,6 @@ public class Puck : MonoBehaviour
             PVP_Player2.GetComponent<PvP>().targetPos = new Vector3(0, 2.6f, 0);
         }
 
-
         Invoke("HideGoalText", 1.5f);
         Invoke("NextRound", 2.5f);
 
@@ -154,10 +152,6 @@ public class Puck : MonoBehaviour
     }
     public void NextRound()
     {
-
-        // playerMovement.canMove = true;
-        //aiPaddle.aiCanMove = true;
-
         canPlayerMove = true;
         Debug.Log("puck direction" + nextTurnDirection);
         Vector2 direction = new Vector2(0, nextTurnDirection);
